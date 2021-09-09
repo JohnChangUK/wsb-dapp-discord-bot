@@ -9,10 +9,15 @@
 Type `!price` in the Discord channel
 
 ### Config
-Add `config.yaml` to the root of the project with the Discord Bot Token as `token`
+Add `config.yaml` to the root of the project: 
+- Discord bot token as `token`
+- channel id as `price_channel_id`
+- guild id as `guild`
 
 ```yaml
-token: <discord_botToken>
+token: <discord_bot_token>
+price_channel_id: <channel_id>
+guild: <guild_id>
 ```
 
 ### How to run

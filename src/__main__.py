@@ -39,32 +39,29 @@ async def on_ready():
     logger.warning('Started WSB DApp Price Bot')
     bot.loop.create_task(update_price())
     metadata = get_metadata()
-    is_greater = False
-    if float(metadata['price']) >= price_data.previous_price:
-        is_greater = True
+    is_greater = float(metadata['price']) >= float(price_data.previous_price)
     price_data.previous_price = float(metadata['price'])
     await bot.change_presence(activity=discord.Activity(type=discord.activity.ActivityType.watching,
                                                         name=f"24hr: {metadata['24hr_change']}% | Don't 🧻 👐"))
-    await bot.get_guild(771505726333255680).get_member(bot.user.id).edit(
+    await bot.get_guild(config.guild).get_member(bot.user.id).edit(
         nick=f"{'⬈' if is_greater else '⬊'} {metadata['price']} 🚀")
 
 
 @bot.command()
 async def price(ctx):
     metadata = get_metadata()
-    is_greater = False
+    is_greater = float(metadata['price']) >= float(price_data.previous_price)
     color = 0xff0000
-    if float(metadata['price']) > price_data.previous_price:
-        is_greater = True
+    if is_greater:
         color = 0x00ff00
     price_data.previous_price = float(metadata['price'])
-    await bot.get_guild(771505726333255680).get_member(bot.user.id).edit(
+    await bot.get_guild(config.guild).get_member(bot.user.id).edit(
         nick=f"{'⬊' if is_greater else '⬈'} {metadata['price']} 🚀")
     embed = discord.Embed(title="WSB DApp Price Info", description=f"Price from CoinGecko", color=color)
     embed.add_field(name="💸 Price", value=f"{metadata['price']} USD")
     embed.add_field(name="💱 24hr Change", value=f"{metadata['24hr_change']}%")
     embed.add_field(name="📆 Weekly Delta", value=f"{metadata['weekly_delta']}%")
-    if ctx.channel.id != 884903874190802994:
+    if ctx.channel.id != config.price_channel_id:
         await ctx.author.send(embed=embed)
     else:
         await ctx.reply(embed=embed)
@@ -78,7 +75,7 @@ async def update_price():
         await bot.change_presence(activity=discord.Activity(type=discord.activity.ActivityType.watching,
                                                             name=f"24hr: {metadata['24hr_change']}% | Don't 🧻 👐"))
         is_greater = float(metadata['price']) >= float(price_data.previous_price)
-        await bot.get_guild(771505726333255680).get_member(bot.user.id).edit(
+        await bot.get_guild(config.guild).get_member(bot.user.id).edit(
             nick=f"{'⬈' if is_greater else '⬊'} {metadata['price']} 🚀")
         await asyncio.sleep(60)
 
