@@ -13,11 +13,13 @@ Add `config.yaml` to the root of the project:
 - Discord bot token as `token`
 - channel id as `price_channel_id`
 - guild id as `guild`
+- The interval e.g. 30 as `interval`
 
 ```yaml
 token: <discord_bot_token>
 price_channel_id: <channel_id>
 guild: <guild_id>
+interval: 30
 ```
 
 ### How to run
